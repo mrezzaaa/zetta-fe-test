@@ -1,0 +1,39 @@
+.dialogTitle {
+  display: inline-block;
+}
+.dialog-border {
+  border-bottom: 1px solid black;
+  color: black;
+  margin-top: 15px;
+  padding: 0 5px 0 15px;
+}
+.mr-0 {
+  margin-right: 0px;
+}
+.mr-10 {
+  margin-right: 10px;
+}
+.mat-dialog-content {
+  margin-right: 0px;
+  margin-left: 0px;
+  margin-top: 15px;
+}
+.w-30 {
+  width: 30px;
+}
+.w-65 {
+  width: 40px !important;
+  text-align: right;
+}
+.mt-5px {
+  margin-top: 5px;
+}
+:host::ng-deep  .mat-checkbox.ng-invalid.ng-touched,
+.mat-checkbox.ng-invalid.ng-dirty {
+  .mat-checkbox-frame {
+    border-color: #ff5722;
+  }
+  .mat-checkbox-label {
+    color: #ff5722;
+  }
+}

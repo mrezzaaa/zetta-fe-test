@@ -1,0 +1,147 @@
+<div
+  id="main-app"
+  class="app header-color-dark"
+  [dir]="layout"
+  [ngClass]="{
+    'app-dark': true,
+    'collapsed-sidebar': coreService.collapseSidebar,
+    'compact-sidebar': compactSidebar,
+    'customizer-in': customizerIn
+  }"
+  [class.dashboard-menu]="router?.url?.includes('/user-dashboard')"
+  [class.side-panel-opened]="false"
+  [class.side-panel-icon]="false"
+  [class.side-panel-closed]="true"
+>
+  <mat-sidenav-container class="gene-container">
+    <div class="gene-base-container" (scroll)="onScrollContainer($event)" #scrollContainer>
+      <div class="inner-container" fxLayout="row wrap">
+        <div class="full-wid" fxFlex="100">
+          <router-outlet (activate)="onActivate($event, scrollContainer)"></router-outlet>
+        </div>
+      </div>
+    </div>
+  </mat-sidenav-container>
+  <div class="gene-chat-wrap" id="gene-chat">
+    <mat-card class="people-list">
+      <mat-tab-group class="height-full">
+        <mat-tab label="Chat" class="height-full">
+          <div class="gene-card-content height-full">
+            <div class="chat-people-list height-full">
+              <mat-list role="list">
+                <ng-container *ngFor="let chat of chatList">
+                  <mat-list-item role="listitem" (click)="onChatOpen()">
+                    <div class="gene-list-item full-wid" fxLayout="row wrap" fxLayoutAlign="space-around center">
+                      <div class="image-wrap" fxFlex="50px" class="mrgn-r-sm">
+                        <img src="{{ chat.image }}" alt="User" />
+                      </div>
+                      <div class="people-desc" fxFlex="calc(100% - 100px)">
+                        <h4 class="margin-none font-normal make-ellipse">{{ chat.name }}</h4>
+                        <span class="gene-text-md inline-block make-ellipse">{{ chat.chat }}</span>
+                      </div>
+                      <div fxFlex="30px">
+                        <div class="show-status mat-grey-300 {{ chat.mode }}"></div>
+                      </div>
+                    </div>
+                  </mat-list-item>
+                  <mat-divider class="mrgn-y-xs gene-relative"></mat-divider>
+                </ng-container>
+              </mat-list>
+            </div>
+          </div>
+        </mat-tab>
+        <mat-tab label="Settings">
+          <div class="gene-card-content height-full">
+            <div class="chat-settings-list mrgn-b-xl">
+              <mat-list role="list">
+                <h3 mat-subheader class="mat-pad-none mrgn-b-md"><i class="material-icons">settings</i>Settings</h3>
+                <mat-list-item role="listitem">
+                  <div class="gene-list-item full-wid" fxLayout="row wrap" fxLayoutAlign="space-between center">
+                    <div class="people-desc" fxFlex="200px">
+                      <h4 class="margin-none font-normal make-ellipse">Notifications</h4>
+                    </div>
+                    <div fxFlex="60px">
+                      <mat-slide-toggle></mat-slide-toggle>
+                    </div>
+                  </div>
+                </mat-list-item>
+                <mat-divider class="mrgn-y-sm gene-relative"></mat-divider>
+                <mat-list-item role="listitem">
+                  <div class="gene-list-item full-wid" fxLayout="row wrap" fxLayoutAlign="space-between center">
+                    <div class="people-desc" fxFlex="200px">
+                      <h4 class="margin-none font-normal make-ellipse">Quick Results</h4>
+                    </div>
+                    <div fxFlex="60px">
+                      <mat-slide-toggle></mat-slide-toggle>
+                    </div>
+                  </div>
+                </mat-list-item>
+                <mat-divider class="mrgn-y-sm gene-relative"></mat-divider>
+                <mat-list-item role="listitem">
+                  <div class="gene-list-item full-wid" fxLayout="row wrap" fxLayoutAlign="space-between center">
+                    <div class="people-desc" fxFlex="200px">
+                      <h4 class="margin-none font-normal make-ellipse">Auto Update</h4>
+                    </div>
+                    <div fxFlex="60px">
+                      <mat-slide-toggle></mat-slide-toggle>
+                    </div>
+                  </div>
+                </mat-list-item>
+                <mat-divider class="mrgn-y-sm gene-relative"></mat-divider>
+              </mat-list>
+            </div>
+            <div class="chat-account-list">
+              <mat-list role="list">
+                <h3 mat-subheader class="mat-pad-none mrgn-b-md"><i class="material-icons">perm_identity</i>Account</h3>
+                <mat-list-item role="listitem">
+                  <div class="gene-list-item full-wid" fxLayout="row wrap" fxLayoutAlign="space-between center">
+                    <div class="people-desc" fxFlex="200px">
+                      <h4 class="margin-none font-normal make-ellipse">Offline Mode</h4>
+                    </div>
+                    <div fxFlex="60px">
+                      <mat-slide-toggle></mat-slide-toggle>
+                    </div>
+                  </div>
+                </mat-list-item>
+                <mat-divider class="mrgn-y-sm gene-relative"></mat-divider>
+                <mat-list-item role="listitem">
+                  <div class="gene-list-item full-wid" fxLayout="row wrap" fxLayoutAlign="space-between center">
+                    <div class="people-desc" fxFlex="200px">
+                      <h4 class="margin-none font-normal make-ellipse">Location Share</h4>
+                    </div>
+                    <div fxFlex="60px">
+                      <mat-slide-toggle></mat-slide-toggle>
+                    </div>
+                  </div>
+                </mat-list-item>
+                <mat-divider class="mrgn-y-sm gene-relative"></mat-divider>
+                <mat-list-item role="listitem">
+                  <div class="gene-list-item full-wid" fxLayout="row wrap" fxLayoutAlign="space-between center">
+                    <div class="people-desc" fxFlex="200px">
+                      <h4 class="margin-none font-normal make-ellipse">Show Offline User</h4>
+                    </div>
+                    <div fxFlex="60px">
+                      <mat-slide-toggle></mat-slide-toggle>
+                    </div>
+                  </div>
+                </mat-list-item>
+                <mat-divider class="mrgn-y-sm gene-relative"></mat-divider>
+                <mat-list-item role="listitem">
+                  <div class="gene-list-item full-wid" fxLayout="row wrap" fxLayoutAlign="space-between center">
+                    <div class="people-desc" fxFlex="200px">
+                      <h4 class="margin-none font-normal make-ellipse">Save History</h4>
+                    </div>
+                    <div fxFlex="60px">
+                      <mat-slide-toggle></mat-slide-toggle>
+                    </div>
+                  </div>
+                </mat-list-item>
+                <mat-divider class="mrgn-y-sm gene-relative"></mat-divider>
+              </mat-list>
+            </div>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card>
+  </div>
+</div>

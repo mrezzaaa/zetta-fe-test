@@ -1,0 +1,347 @@
+@import '~assets/scss/theme/admtc.variables';
+
+.example-sidenav-content {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.cart-item {
+  .content-wrap {
+    font-size: 0.85rem;
+  }
+}
+.fullscreen-menu {
+  display: none;
+}
+.bolt {
+  padding-left: 4px;
+  margin-right: 12px;
+}
+
+.contact-icon {
+  float: left;
+  margin-left: 1px;
+  margin-right: 3px;
+}
+p.current-date {
+  vertical-align: middle;
+  text-align: justify;
+  margin: 0px;
+}
+.theme {
+  padding-top: 10px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+.help-menu {
+  min-width: 130px !important;
+}
+.dashboard-menu .gene-header-toolbar.mat-toolbar .mat-button,
+.dashboard-menu .gene-header-toolbar.mat-toolbar .mat-icon-button,
+.dashboard-menu .gene-header-toolbar.mat-toolbar .mat-raised-button,
+.dashboard-menu .gene-header-toolbar.mat-toolbar .mat-input-element {
+  color: var(--custom-element-third-color) !important;
+}
+:host::ng-deep {
+  color-picker {
+    position: sticky !important;
+  }
+  .color-picker {
+    position: sticky !important;
+    width: 230px !important;
+    border: none;
+  }
+  .color-picker .arrow.arrow-bottom-left {
+    display: none;
+  }
+}
+
+.theme-area {
+  background: var(--custom-element-second-color) !important;
+}
+.theme-area-tutorial {
+  background: #424242 !important;
+  width: 50vw;
+}
+.title-theme {
+  min-width: 350px;
+}
+.color-palette-container {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+.contact-us:hover {
+  background-color: rgba(0, 0, 0, 0.083);
+}
+
+.contact-en {
+  width: 140px;
+}
+.contact-fr {
+  width: 165px;
+}
+
+.tuto-icon {
+  width: 14px;
+  margin-right: 8px;
+  margin-left: 1px;
+  padding-left: 2px;
+}
+
+.tuto-icon-nav {
+  width: 18px !important;
+  margin-right: 11px !important;
+}
+
+.tutorial:hover {
+  background-color: rgba(0, 0, 0, 0.083);
+}
+
+.help-wrap {
+  position: relative;
+  padding: 0px;
+  margin: 0px;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.add-btn {
+  background: $dark-yellow;
+  // width: 11rem;
+  color: $black !important;
+  display: inline-block;
+  width: auto;
+  min-width: 11rem;
+  padding-right: 7px;
+  padding-left: 7px;
+}
+
+.secondary-menu button {
+  height: 2.5rem;
+}
+
+.page-title {
+  flex-direction: row;
+  box-sizing: border-box;
+  display: flex;
+  width: fit-content;
+  flex: 1;
+}
+
+.arrow-header-icon {
+  margin-top: -7.5px !important;
+  height: 20px;
+}
+
+.selected-tab-information {
+  margin-top: -7.5px !important;
+}
+
+.header-icon {
+  font-size: 1.5em;
+  width: max-content;
+  max-width: 48px;
+}
+
+.platform-icon {
+  font-size: 1.2em !important;
+  vertical-align: middle !important;
+}
+
+.yellow-banner {
+  background-color: darkorange;
+  color: black;
+  margin-top: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
+  padding-left: 5px;
+  padding-right: 20px;
+  font-size: 9px;
+  text-align: center;
+  word-break: break-word;
+  white-space: normal;
+}
+
+:host::ng-deep.mat-list-base .mat-list-item .mat-line {
+  white-space: break-spaces !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  box-sizing: border-box;
+  text-align: justify !important;
+}
+
+::ng-deep.theme-panel {
+  max-height: 100% !important;
+  margin-top: 35px !important;
+}
+
+::ng-deep.theme-panel-80 {
+  max-height: calc(100% - 150px) !important;
+  margin-top: 35px !important;
+}
+
+::ng-deep.theme-panel-34 {
+  max-height: calc(100% - 70px) !important;
+  margin-top: 35px !important;
+}
+
+.newNotif {
+  color: white;
+  background-color: red;
+  height: 10px;
+  border-radius: 50%;
+  position: absolute;
+  width: 10px;
+  left: 16px;
+}
+
+.bolt {
+  padding-left: 4px;
+  margin-right: 8px !important;
+}
+
+.contact-icon {
+  float: left;
+  margin-left: 1px;
+  margin-right: 4px;
+}
+
+.ticket-icon {
+  float: left;
+  margin-left: 1px;
+  margin-right: 5px;
+}
+
+.help-menu {
+  min-width: 130px !important;
+}
+
+.contact-us:hover {
+  background-color: rgba(0, 0, 0, 0.083);
+}
+
+.contact-en {
+  width: 175px;
+}
+.contact-fr {
+  width: 175px;
+}
+
+.tuto-icon {
+  width: 14px;
+  margin-right: 8px;
+  margin-left: 1px;
+  padding-left: 2px;
+}
+
+.tutorial:hover {
+  background-color: rgba(0, 0, 0, 0.083);
+}
+
+.help-wrap {
+  position: relative;
+  padding: 0px;
+  margin: 0px;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.add-btn {
+  background: $dark-yellow;
+  // width: 11rem;
+  color: $black !important;
+  display: inline-block;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: auto;
+  min-width: 11rem;
+  padding-right: 7px;
+  padding-left: 7px;
+}
+
+.secondary-menu button {
+  height: 2.5rem;
+}
+
+.icon-display {
+  transform: translateY(5px) scale(0.7);
+}
+
+.custom-icon-acadkit {
+  width: 70%;
+}
+
+.navbar {
+  a {
+    white-space: break-spaces;
+  }
+}
+
+.tutorial-help-button {
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  margin-left: 10px !important;
+  line-height: 16px;
+  margin: 0px;
+  padding: 0px !important;
+
+  & img {
+    font-size: 16px;
+    width: 65px;
+    top: -4px;
+    position: relative;
+  }
+}
+.w-full {
+  width: 100% !important;
+}
+.px-4 {
+  padding: 0 1rem !important;
+}
+.text-start {
+  text-align: start !important;
+}
+.-translate-x-3px {
+  transform: translateX(-3px) !important;
+}
+.mr-2\.5 {
+  margin-right: 0.625rem !important;
+}
+.mr-1 {
+  margin-right: 0.25rem !important;
+}
+.h-\[38px\] {
+  height: 38px !important;
+}
+.mr-\[11px\] {
+  margin-right: 11px !important;
+}
+.flex {
+  display: flex !important;
+}
+.items-center {
+  align-items: center !important;
+}
+.w-fit {
+  width: fit-content !important;
+}
+.mr-2 {
+  margin-right: 0.5rem !important;
+}
+.gap-4 {
+  gap: 1rem !important;
+}
+.font-bold {
+  font-weight: bold !important;
+}
+.px-2 {
+  padding: 0 0.5rem !important;
+}
+.border-help {
+  border: 1px solid;
+}

@@ -1,0 +1,57 @@
+@use '@angular/material' as mat;
+
+:root {
+  --custom-element-primary-color: #363636;
+  --custom-element-second-color: #424242;
+  --custom-element-third-color: #ffffff;
+  --custom-contrast-primary-color: color-contrast(var(--custom-element-primary-color) vs white, cyan, magenta, black);
+  --custom-contrast-second-color: color-contrast(var(--custom-element-second-color) vs white, cyan, magenta, black);
+  --custom-contrast-third-color: color-contrast(var(--custom-element-third-color) vs white, cyan, magenta, black);
+  // Define other variables as needed
+}
+.dashboard-menu {
+  color: var(--custom-element-third-color) !important;
+  .mat-form-field-appearance-legacy .mat-form-field-label,
+  .mat-form-field-appearance-legacy .mat-hint {
+    color: var(--custom-element-third-color) !important;
+  }
+  .mat-select-min-line {
+    color: var(--custom-element-third-color) !important;
+  }
+  .mat-select-panel {
+    background-color: var(--custom-element-primary-color) !important;
+  }
+  .mat-form-field-underline {
+    background-color: var(--custom-element-third-color) !important;
+  }
+  span.task-due-date {
+    color: var(--custom-element-third-color) !important;
+  }
+  .mat-sidenav-content {
+    background-color: var(--custom-element-primary-color) !important;
+    color: var(--custom-element-third-color) !important;
+  }
+  .primary-bg {
+    background-color: var(--custom-element-primary-color) !important;
+    color: var(--custom-element-third-color) !important;
+  }
+  .mat-drawer-container {
+    background-color: var(--custom-element-primary-color) !important;
+    color: var(--custom-element-third-color) !important;
+  }
+  .gene-header-toolbar {
+    background: var(--custom-element-primary-color) !important;
+    color: var(--custom-element-third-color) !important;
+  }
+  .mat-card {
+    background: var(--custom-element-second-color) !important;
+    color: var(--custom-element-third-color) !important;
+  }
+  .mat-expansion-panel {
+    background-color: var(--custom-element-second-color) !important;
+    color: var(--custom-element-third-color) !important;
+  }
+  .sidebar-area.mat-sidenav {
+    background: var(--custom-element-second-color) !important;
+  }
+}

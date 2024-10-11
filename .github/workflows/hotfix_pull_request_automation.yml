@@ -1,0 +1,32 @@
+name: Create Pull Request for Hotfix
+run-name: ${{ github.actor }} is doing create automation pull request from hotfix branch
+on:
+  push:
+    branches:
+      - 'hotfix/**'  # This pattern matches branches with 'hotfix/' prefix
+jobs:
+  create_pull_request:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Setup node
+      uses: actions/setup-node@v3
+      with:
+          node-version: '14'
+    - uses: webfactory/ssh-agent@v0.7.0
+      with:
+          ssh-private-key: ${{ secrets.SSH_Automatic_Backup }}
+    - name: Create Pull Request
+      run: |
+        if [ "${{ github.event_name }}" == "push" ]; then
+          branch_name=$(echo "${{ github.ref }}" | sed 's/refs\/heads\///')
+          echo "Creating a pull request for branch $branch_name..."
+          current_datetime=$(date +"%Y%m%d %H:%M")
+          pr_title="Automated Pull Request for $branch_name - $current_datetime"
+          pr_body="This pull request was automatically created when branch $branch_name was pushed."
+
+          gh pr create --base dev_production --head "$branch_name" --title "$pr_title" --body "$pr_body"
+        fi
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

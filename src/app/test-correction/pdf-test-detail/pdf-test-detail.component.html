@@ -1,0 +1,587 @@
+<div #pagesElement style="overflow: auto" *ngIf="test">
+  <div
+    class="document"
+    [ngClass]="'preview-orientation-' + test?.correction_grid?.orientation"
+  >
+    <div class="pa-1" style="min-height: 100%; position: relative">
+      <div class="doc-page-no" style="text-align: right">1 / {{ pages }}</div>
+      <div class="doc-rncp-title" style="text-align: center; font-size: 16px">
+        {{ 'TEST.EVALUATIONGRID' | translate }}{{ ' ' }}{{ test?.name }}{{ ' ' }}
+      </div>
+      <div class="doc-rncp-title" style="text-align: center; font-size: 16px">
+        {{ rncpTitle?.short_name + (rncpTitle?.short_name && rncpTitle?.long_name ? '-' : ' ') + rncpTitle?.long_name }}
+      </div>
+      <div class="doc-header">
+        <div class="doc-header-top" [innerHTML]="test?.correction_grid?.header.text | safeHtml"></div>
+        <!-- <div class="doc-header-fields">
+            <div fxLayout="row wrap" fxLayoutAlign="start center">
+              <div class="lineme pr-1" fxFlex="50">Etablissement :</div>
+              <div style="text-align: right;" fxFlex="50"></div>
+              <div class="lineme pr-1" *ngIf="!test.group_test" fxFlex="50">Nom :</div>
+              <div class="lineme pr-1" *ngIf="test?.group_test" fxFlex="50">Nom du Groupe :</div>
+              <div style="text-align: right;" fxFlex="50"></div>
+            </div>
+          </div> -->
+        <div
+          class="doc-header-fields"
+          *ngIf="
+            test?.correction_grid &&
+            test?.correction_grid?.header &&
+            test?.correction_grid?.header.fields &&
+            test?.correction_grid?.header.fields.length > 0
+          "
+        >
+          <div fxLayout="row wrap" fxLayoutAlign="start center">
+            <ng-template ngFor let-i="index" let-c="count" let-field [ngForOf]="test?.correction_grid?.header.fields">
+              <ng-template [ngIf]="field.type === 'longtext'">
+                <div class="lineme" fxFlex="100">{{ field.value }} :</div>
+              </ng-template>
+              <ng-template [ngIf]="field.type != 'longtext' && field.align === 'left'">
+                <div
+                  [ngClass]="{
+                    lineme: field.type != 'signature',
+                    signature: field.type === 'signature',
+                    'pr-1': field.align === 'left'
+                  }"
+                  fxFlex="50"
+                >
+                  {{ field.value | translate }} :
+                </div>
+                <ng-template [ngIf]="i === c - 1 || test?.correction_grid?.header?.fields?.[i + 1]?.align === 'left'">
+                  <div fxFlex="50"></div>
+                </ng-template>
+              </ng-template>
+              <ng-template [ngIf]="field?.type != 'longtext' && field?.align === 'right'">
+                <ng-template
+                  [ngIf]="
+                    i === 0 ||
+                    test?.correction_grid?.header?.fields?.[i - 1]?.align === 'right' ||
+                    test?.correction_grid?.header?.fields?.[i - 1]?.type === 'longtext'
+                  "
+                >
+                  <div fxFlex="50"></div>
+                </ng-template>
+                <div
+                  [ngClass]="{
+                    lineme: field?.type != 'signature',
+                    signature: field?.type === 'signature'
+                  }"
+                  fxFlex="50"
+                >
+                  {{ field?.value | translate }} :
+                </div>
+              </ng-template>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+      <div class="doc-group-details" *ngIf="test?.group_test">
+        <div class="group-header">
+          {{ test?.correction_grid?.group_detail?.header_text }}
+        </div>
+        <table class="group-table">
+          <tbody>
+            <tr class="header black-border">
+              <th width="10%" class="text-center font-weight-bold"></th>
+              <th class="text-center font-weight-bold">{{ 'TEST.NAMEOFSTUDENT' | translate }}</th>
+            </tr>
+            <tr *ngFor="let s of students; index as i" style="background-color: white !important" class="black-border">
+              <td>{{ i + 1 }}.</td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="doc-grid">
+        <div
+          *ngIf="test?.correction_grid && test?.correction_grid?.correction && test?.correction_grid?.correction?.show_as_list"
+        >
+          <ng-template ngFor let-section [ngForOf]="pageSectionsArray[0]">
+            <div
+              fxLayout="row wrap"
+              fxFlexAlign="space-between center"
+              class="text-lg px-1 list-header"
+              *ngIf="section?.is_selected !== false"
+            >
+              <b>{{ section?.ref_id }}</b>
+              <b fxFlex [innerHTML]="section?.title"></b>
+              <b> / {{ test?.correction_grid?.correction?.display_section_coefficient ? test.correction_grid.correction?.section_coefficient?.section_additional_max_score : section?.maximum_rating }}</b>
+            </div>
+            <ul class="my-1 px-1 fix-ql-ul">
+              <ng-container *ngFor="let notation of section?.sub_sections">
+                <li fxLayout="row wrap" *ngIf="notation?.is_selected !== false">
+                  <div>{{ notation?.ref_id }}</div>
+                  <div fxFlex [innerHTML]="notation?.title"></div>
+                  <span *ngIf="test?.correction_grid?.correction?.showNotationsMarks"> / {{ notation?.maximum_rating }} </span>
+                </li>
+              </ng-container>
+            </ul>
+
+            <div *ngIf="test?.correction_grid?.correction?.comment_for_each_sub_section" class="mb-2">
+              <span class="text-lg">
+                <b>{{ test?.correction_grid?.correction?.comment_for_each_sub_section_header }} :</b>
+              </span>
+              <div class="comment-section"></div>
+              <div class="comment-section"></div>
+            </div>
+          </ng-template>
+        </div>
+        <table
+          width="100%"
+          *ngIf="
+            !(test.correction_grid && test?.correction_grid?.correction && test?.correction_grid?.correction?.show_as_list)
+          "
+          class="doc-table"
+        >
+          <tbody>
+            <ng-template ngFor let-section let-sectionIndex="index" [ngForOf]="pageSectionsArray[0]">
+              <tr class="section black-border" *ngIf="section?.is_selected !== false">
+                <td [width]="getTitleWidth()">
+                  <span class="gene-block">{{ section?.ref_id }}</span>
+                  <span [innerHTML]="section?.title"></span>
+                </td>
+                <td class="text-center font-weight-bold" *ngIf="test?.correction_grid?.correction?.show_direction_column">
+                  {{ test?.correction_grid?.correction?.directions_column_header }}
+                </td>
+                <td
+                  class="text-center font-weight-bold"
+                  [width]="'10%'"
+                  *ngIf="test?.correction_grid?.correction?.show_number_marks_column"
+                >
+                  {{ test?.correction_grid?.correction?.number_marks_column_header }}
+                </td>
+                <td
+                  class="text-center font-weight-bold"
+                  [width]="'10%'"
+                  *ngIf="test?.correction_grid?.correction?.show_letter_marks_column"
+                >
+                  {{ test?.correction_grid?.correction?.letter_marks_column_header }}
+                </td>
+                <td
+                  class="text-center font-weight-bold"
+                  [width]="'10%'"
+                  *ngIf="test?.correction_grid?.correction?.show_phrase_marks_column"
+                >
+                  {{ test?.correction_grid?.correction?.phrase_marks_column_header }}
+                </td>
+                <td
+                  class="text-center font-weight-bold"
+                  [width]="'30%'"
+                  *ngIf="test?.correction_grid?.correction?.comment_for_each_sub_section"
+                >
+                  {{ test?.correction_grid?.correction?.comment_for_each_sub_section_header }}
+                </td>
+              </tr>
+              <ng-container *ngFor="let subSection of section.sub_sections">
+                <tr
+                  class="sub-section black-border"
+                  style="background-color: white !important"
+                  *ngIf="subSection?.is_selected !== false"
+                >
+                  <td>
+                    <span class="gene-block">{{ subSection?.ref_id }}</span>
+                    <span [innerHTML]="subSection?.title"></span>
+                  </td>
+                  <td *ngIf="test?.correction_grid?.correction.show_direction_column" [innerHTML]="subSection?.direction"></td>
+                  <td align="right" *ngIf="test?.correction_grid?.correction?.show_number_marks_column">
+                    <u>/ {{ subSection.maximum_rating }}</u>
+                  </td>
+                  <td *ngIf="test?.correction_grid?.correction?.show_letter_marks_column"></td>
+                  <td *ngIf="test?.correction_grid?.correction?.show_phrase_marks_column"></td>
+                  <td *ngIf="test?.correction_grid?.correction?.comment_for_each_sub_section"></td>
+                </tr>
+              </ng-container>
+              <ng-container *ngIf="test?.block_type !== 'competence' && test?.block_type !== 'soft_skill'">
+                <tr
+                  style="background-color: white !important"
+                  class="black-border"
+                  *ngIf="test?.correction_grid?.correction?.show_number_marks_column"
+                >
+                  <td
+                    [attr.colspan]="1 + test?.correction_grid?.correction?.show_direction_column"
+                    align="right"
+                    *ngIf="test?.correction_grid?.correction?.display_section_coefficient">
+                    {{ 'Total mark section #' | translate:{index:sectionIndex + 1} }} - Coef {{ (section?.coefficient || 0) | number: '1.' + test.correction_grid.correction?.section_coefficient?.section_decimal_place + '-' + test.correction_grid.correction?.section_coefficient?.section_decimal_place : (currentLang$ | async) }}
+                  </td>
+                  <td
+                    [attr.colspan]="1 + test?.correction_grid?.correction?.show_direction_column"
+                    class="no-border"
+                    *ngIf="!test?.correction_grid?.correction?.display_section_coefficient">
+                  </td>
+                  <td align="right" *ngIf="test?.correction_grid?.correction?.show_number_marks_column">
+                    <u>/ {{ test?.correction_grid?.correction?.display_section_coefficient ? test.correction_grid.correction?.section_coefficient?.section_additional_max_score : section?.maximum_rating }}</u>
+                  </td>
+                  <td *ngIf="test?.correction_grid?.correction?.show_letter_marks_column"></td>
+                  <td *ngIf="test?.correction_grid?.correction?.show_phrase_marks_column"></td>
+                  <td *ngIf="test?.correction_grid?.correction?.comment_for_each_sub_section"></td>
+                </tr>
+              </ng-container>
+              <tr
+                style="background-color: white !important"
+                class="black-border"
+                *ngIf="test?.correction_grid?.correction?.comment_for_each_section && section?.is_selected !== false"
+              >
+                <td colspan="5">
+                  <b>{{ test?.correction_grid?.correction?.comment_for_each_section_header }}</b>
+                </td>
+              </tr>
+              <!-- to separate each section -->
+              <tr style="background-color: white !important; border: none">
+                <td class="no-border"></td>
+              </tr>
+            </ng-template>
+          </tbody>
+        </table>
+        <div *ngIf="showBottomGrid(1); then bottomGrid"></div>
+      </div>
+      <div *ngIf="showBottomGrid(1); then gridFooter"></div>
+      <!-- <div *ngIf="docFooterText" class="operator-footer-text">
+        {{ 'ADMTC – ' }} {{ 'TEST.EVALUATIONGRID' | translate }} {{ ' ' }} {{ test.name }} {{ ' – ' }}
+        {{ rncpTitle?.short_name }}
+      </div> -->
+      <div *ngIf="docFooterText" class="doc-footer">
+        <div class="doc-footer-text">
+          ADMTC – {{ 'TEST.EVALUATIONGRID' | translate }} {{ test?.name }} - {{ rncpTitle?.short_name }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="page-break-before: always; position: relative"></div>
+  <div
+    *ngFor="let pageArray of getArrayExceptFirst(); index as pageArrayIndex"
+    [ngStyle]="{ display: visiblePage === pageArrayIndex + 2 ? 'block' : 'none' }"
+    class="document"
+    [ngClass]="'preview-orientation-' + test?.correction_grid?.orientation"
+  >
+    <div style="page-break-after: always; position: relative"></div>
+    <div class="pa-1" style="min-height: 100%; position: relative">
+      <div class="doc-page-no" style="text-align: right">{{ pageArrayIndex + 2 }} / {{ pages }}</div>
+      <div class="doc-rncp-title">
+        <span>{{ rncpTitle ? rncpTitle?.longName : '' }}</span>
+      </div>
+      <div class="doc-grid">
+        <div
+          *ngIf="test?.correction_grid?.correction?.show_as_list"
+        >
+          <ng-template ngFor let-section [ngForOf]="pageSectionsArray[pageArrayIndex + 1]">
+            <div
+              fxLayout="row wrap"
+              fxFlexAlign="space-between center"
+              class="text-lg px-1 list-header"
+              *ngIf="section?.is_selected !== false"
+            >
+              <b>{{ section?.ref_id }}</b>
+              <b fxFlex [innerHTML]="section?.title"></b>
+              <b> / {{ test?.correction_grid?.correction?.display_section_coefficient ? test.correction_grid.correction?.section_coefficient?.section_additional_max_score : section?.maximum_rating }}</b>
+            </div>
+            <ul class="my-1 px-1 fix-ql-ul">
+              <ng-container *ngFor="let notation of section?.sub_ection">
+                <li fxLayout="row wrap" *ngIf="notation?.is_selected !== false">
+                  <div>{{ notation?.ref_id }}</div>
+                  <div fxFlex [innerHTML]="notation?.title"></div>
+                  <span *ngIf="test?.correction_grid?.correction?.show_notation_marks"> / {{ notation?.maximum_rating }} </span>
+                </li>
+              </ng-container>
+            </ul>
+
+            <div *ngIf="test?.correction_grid?.correction?.comment_for_each_sub_section" class="mb-2">
+              <span class="text-lg">
+                <b>{{ test?.correction_grid?.correction?.comment_for_each_sub_section_header }} :</b>
+              </span>
+              <div class="comment-section"></div>
+              <div class="comment-section"></div>
+            </div>
+          </ng-template>
+        </div>
+        <table
+          width="100%"
+          *ngIf="!test?.correction_grid?.correction?.show_as_list"
+          class="doc-table"
+        >
+          <tbody>
+            <ng-template ngFor let-section let-sectionIndex="index" [ngForOf]="pageSectionsArray[pageArrayIndex + 1]">
+              <tr class="section black-border" *ngIf="section?.is_selected !== false">
+                <td [width]="getTitleWidth()">
+                  <span class="gene-block">{{ section?.ref_id }}</span>
+                  <span [innerHTML]="section?.title"></span>
+                </td>
+                <td class="text-center font-weight-bold" *ngIf="test?.correction_grid?.correction?.show_direction_column">
+                  {{ test?.correction_grid?.correction?.directions_column_header }}
+                </td>
+                <td
+                  class="text-center font-weight-bold"
+                  [width]="'10%'"
+                  *ngIf="test?.correction_grid?.correction?.show_number_marks_column"
+                >
+                  {{ test?.correction_grid?.correction?.number_marks_column_header }}
+                </td>
+                <td
+                  class="text-center font-weight-bold"
+                  [width]="'10%'"
+                  *ngIf="test?.correction_grid?.correction?.show_letter_marks_column"
+                >
+                  {{ test?.correction_grid?.correction.letter_marks_column_header }}
+                </td>
+                <td
+                  class="text-center font-weight-bold"
+                  [width]="'10%'"
+                  *ngIf="test?.correction_grid?.correction?.show_phrase_marks_column"
+                >
+                  {{ test?.correction_grid?.correction?.phrase_marks_column_header }}
+                </td>
+                <td
+                  class="text-center font-weight-bold"
+                  *ngIf="test?.correction_grid?.correction?.comment_for_each_sub_section"
+                >
+                  {{ test?.correction_grid?.correction?.comment_for_each_sub_section_header }}
+                </td>
+              </tr>
+              <ng-container *ngFor="let subSection of section?.sub_sections">
+                <tr
+                  class="sub-section black-border"
+                  style="background-color: white !important"
+                  *ngIf="subSection?.is_selected !== false"
+                >
+                  <td>
+                    <span class="gene-block">{{ subSection?.ref_id }}</span>
+                    <span [innerHTML]="subSection?.title"></span>
+                  </td>
+                  <td *ngIf="test?.correction_grid?.correction?.show_direction_column" [innerHTML]="subSection?.direction"></td>
+                  <td align="right" *ngIf="test?.correction_grid?.correction?.show_number_marks_column">
+                    <u>/ {{ subSection?.maximum_rating }}</u>
+                  </td>
+                  <td *ngIf="test?.correction_grid?.correction?.show_letter_marks_column"></td>
+                  <td *ngIf="test?.correction_grid?.correction?.show_phrase_marks_column"></td>
+                  <td *ngIf="test?.correction_grid?.correction?.comment_for_each_sub_section"></td>
+                </tr>
+              </ng-container>
+              <ng-container *ngIf="test?.block_type !== 'competence' && test?.block_type !== 'soft_skill'">
+                <tr
+                  style="background-color: white !important"
+                  class="black-border"
+                  *ngIf="test?.correction_grid?.correction?.show_number_marks_column"
+                >
+                  <td
+                    [attr.colspan]="1 + test?.correction_grid?.correction?.show_direction_column"
+                    align="right"
+                    *ngIf="test?.correction_grid?.correction?.display_section_coefficient">
+                    {{ 'Total mark section #' | translate:{index:sectionIndex + 1} }} - Coef {{ (section?.coefficient || 0) | number: '1.' + test.correction_grid.correction?.section_coefficient?.section_decimal_place + '-' + test.correction_grid.correction?.section_coefficient?.section_decimal_place : (currentLang$ | async) }}
+                  </td>
+                  <td
+                    [attr.colspan]="1 + test?.correction_grid?.correction?.show_direction_column"
+                    class="no-border"
+                    *ngIf="!test?.correction_grid?.correction?.display_section_coefficient">
+                  </td>
+                  <td align="right" *ngIf="test?.correction_grid?.correction?.show_number_marks_column">
+                    <u>/ {{ test?.correction_grid?.correction?.display_section_coefficient ? test.correction_grid.correction?.section_coefficient?.section_additional_max_score : section?.maximum_rating }}</u>
+                  </td>
+                  <td *ngIf="test?.correction_grid?.correction?.show_letter_marks_column"></td>
+                  <td *ngIf="test?.correction_grid?.correction?.show_phrase_marks_column"></td>
+                  <td *ngIf="test?.correction_grid?.correction?.comment_for_each_sub_section"></td>
+                </tr>
+              </ng-container>
+              <tr
+                style="background-color: white !important"
+                class="black-border"
+                *ngIf="test.correction_grid?.correction?.comment_for_each_section && section?.is_selected !== false"
+              >
+                <td colspan="5">
+                  <b>{{ test.correction_grid?.correction?.comment_for_each_section_header }}</b>
+                </td>
+              </tr>
+              <!-- to separate each section -->
+              <tr style="background-color: white !important; border: none">
+                <td class="no-border"></td>
+              </tr>
+            </ng-template>
+          </tbody>
+        </table>
+        <div *ngIf="showBottomGrid(pageArrayIndex + 2); then bottomGrid"></div>
+      </div>
+      <div *ngIf="showBottomGrid(pageArrayIndex + 2); then gridFooter"></div>
+      <!-- <div *ngIf="docFooterText" class="operator-footer-text">
+        {{ 'ADMTC – ' }} {{ 'TEST.EVALUATIONGRID' | translate }} {{ ' ' }} {{ test.name }} {{ ' – ' }}
+        {{ rncpTitle?.short_name }}
+      </div> -->
+      <div *ngIf="docFooterText" class="doc-footer">
+        <div class="doc-footer-text">
+          ADMTC – {{ 'TEST.EVALUATIONGRID' | translate }} {{ test?.name }} - {{ rncpTitle?.short_name }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #bottomGrid>
+  <div
+    fxLayout="row wrap"
+    class="doc-penalties mt-1"
+    *ngIf="test?.correction_grid?.correction?.show_penalty || test?.correction_grid?.correction?.show_bonus"
+  >
+    <div fxFlex>
+      <ng-template [ngIf]="test?.correction_grid?.correction?.show_penalty">
+        <table class="doc-table">
+          <tr>
+            <td class="pr-1 font-weight-bold" style="border: none; padding-left: 0">
+              {{ test?.correction_grid?.correction?.penalty_header }}
+            </td>
+            <td align="center" class="font-weight-bold" width="10%" style="border: none"></td>
+          </tr>
+          <tr *ngFor="let penalty of test?.correction_grid?.correction?.penalties; index as i">
+            <td style="border: none; padding-left: 0">{{ penalty?.title }}</td>
+            <td class="score-column">&nbsp;</td>
+          </tr>
+        </table>
+      </ng-template>
+
+      <ng-template [ngIf]="test?.correction_grid?.correction?.show_bonus">
+        <table class="doc-table">
+          <tr style="border: none">
+            <td class="pr-1 font-weight-bold" style="border: none; padding-left: 0">
+              {{ test?.correction_grid?.correction?.bonus_header }}
+            </td>
+            <td align="center" class="font-weight-bold" style="border: none" width="10%"></td>
+          </tr>
+          <tr *ngFor="let bonus of test?.correction_grid?.correction?.bonuses; index as i">
+            <td style="border: none; padding-left: 0">{{ bonus?.title }}</td>
+            <td class="score-column">&nbsp;</td>
+          </tr>
+        </table>
+      </ng-template>
+    </div>
+  </div>
+
+  <div fxLayout="row wrap" *ngIf="test?.correction_grid?.correction?.show_elimination">
+    <div fxFlex>
+      <div class="mt-1">
+        <span class="text-lg">
+          <b>{{ 'TEST.ELIMINATION' | translate }} :</b>
+        </span>
+        <table class="doc-table" width="100%">
+          <tr style="height: 20px" class="sub-section" style="background-color: white !important">
+            <!-- <td style="padding-left:0.75rem; padding-right:0.75rem"></td>
+              <td style="border:none;">&nbsp; &nbsp;</td> -->
+            <td style="border: none; padding-left: 0 !important">{{ 'TEST.REASON' | translate }}{{ ':' }}</td>
+            <td style="width: 87.3%">
+              <span></span>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- final total for normal test -->
+  <div
+    style="overflow: hidden"
+    *ngIf="
+      test?.correction_grid?.correction?.display_final_total &&
+      test?.correction_grid?.correction?.show_number_marks_column &&
+      test?.block_type !== 'competence' &&
+      test?.block_type !== 'soft_skill'
+    "
+  >
+    <table class="doc-table mt-1" style="float: right">
+      <tbody>
+        <tr class="black-border">
+          <td class="head px-1">Total /{{ getMaxScore() }}</td>
+          <td class="px-3"></td>
+        </tr>
+        <tr class="black-border" *ngIf="test?.correction_grid?.correction.total_zone?.display_additional_total">
+          <td class="head px-1">Total /{{ getMaxCustomScore() }}</td>
+          <td class="body px-3" style="background-color: white !important"></td>
+        </tr>
+        <tr class="black-border" *ngIf="test?.type == 'Jury' || test?.type == 'Memoire-ORAL'">
+          <td class="head px-1">{{ 'TEST.SCORE_BY_JURY' | translate }} /{{ getMaxCustomScore() }}</td>
+          <td class="body px-3" style="background-color: white !important"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- final total for eval by competence/expertise free continous control test -->
+  <div style="overflow: hidden" *ngIf="test?.block_type === 'competence' || test?.block_type === 'soft_skill'">
+    <table class="doc-table mt-1" style="float: right" *ngIf="test?.type === 'free_continuous_control'">
+      <tbody>
+        <tr class="black-border">
+          <td class="head px-1">Total /{{ getMaxCustomScore() }}</td>
+          <td class="body px-3" style="background-color: white !important"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div fxLayout="row wrap" *ngIf="test?.correction_grid?.correction?.show_final_comment">
+    <div fxFlex>
+      <div class="mt-1">
+        <span class="text-lg">
+          <b>{{ test?.correction_grid?.correction?.final_comment_header }} :</b>
+        </span>
+        <div class="comment-section"></div>
+        <div class="comment-section"></div>
+        <div class="comment-section"></div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #gridFooter>
+  <div class="doc-footer">
+    <div
+      class="doc-footer-text"
+      *ngIf="!test.correction_grid?.footer?.text_below"
+      [innerHTML]="test?.correction_grid?.footer.text | safeHtml"
+    ></div>
+
+    <div class="doc-footer-fields" *ngIf="test?.correction_grid?.footer?.fields?.length > 0">
+      <div fxLayout="row wrap" fxLayoutAlign="start center">
+        <ng-template ngFor let-i="index" let-c="count" let-field [ngForOf]="test?.correction_grid?.footer?.fields">
+          <ng-template [ngIf]="field.type === 'longtext'">
+            <div class="lineme" fxFlex="100">{{ field?.value }} :</div>
+          </ng-template>
+          <ng-template [ngIf]="field?.type != 'longtext' && field?.align === 'left'">
+            <div
+              [ngClass]="{
+                lineme: field?.type != 'signature',
+                signature: field?.type === 'signature',
+                'pr-1': field?.align === 'left'
+              }"
+              fxFlex="50"
+            >
+              {{ field.value }} :
+            </div>
+            <ng-template [ngIf]="i === c - 1 || test?.correction_grid?.footer?.fields?.[i + 1]?.align === 'left'">
+              <div fxFlex="50"></div>
+            </ng-template>
+          </ng-template>
+          <ng-template [ngIf]="field?.type != 'longtext' && field?.align === 'right'">
+            <ng-template
+              [ngIf]="
+                i === 0 ||
+                test?.correction_grid?.footer?.fields?.[i - 1]?.align === 'right' ||
+                test?.correction_grid?.footer?.fields?.[i - 1]?.type === 'longtext'
+              "
+            >
+              <div fxFlex="50"></div>
+            </ng-template>
+            <div
+              [ngClass]="{
+                lineme: field?.type != 'signature',
+                signature: field?.type === 'signature'
+              }"
+              fxFlex="50"
+            >
+              {{ field.value }} :
+            </div>
+          </ng-template>
+        </ng-template>
+      </div>
+    </div>
+
+    <div
+      class="doc-footer-text"
+      *ngIf="test?.correction_grid?.footer?.text_below"
+      [innerHTML]="test?.correction_grid?.footer?.text | safeHtml"
+    ></div>
+  </div>
+</ng-template>
